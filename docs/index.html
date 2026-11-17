@@ -1,0 +1,30 @@
+<!doctype html><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Clipping campaigns</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:720px;margin:2rem auto;padding:0 1rem}
+ul{padding:0}li{margin:.8rem 0;list-style:none;padding:.8rem;border:1px solid #8884;border-radius:8px}
+li.fresh{border-color:#2a7;background:#2a71}
+small{display:block;opacity:.6;margin-top:.3rem}a{text-decoration:none}
+.new{display:none;background:#2a7;color:#fff;font-size:.7rem;padding:.1rem .4rem;border-radius:4px;margin-right:.5rem}
+li.fresh .new{display:inline}
+button{padding:.5rem .9rem;border-radius:8px;border:1px solid #8886;cursor:pointer}
+</style>
+<h1>GTA 6 / IShowSpeed clipping campaigns</h1>
+<p>New campaign links show up here. Keywords: gta 6, gta6, gta vi, ishowspeed, speed</p>
+<p><button id=n>Turn on browser alerts</button> <span id=s></span></p>
+<ul><li>No matches yet. This page updates itself, check back soon.</li></ul>
+<script>
+const items=[...document.querySelectorAll('li[data-ts]')];
+const now=Date.now()/1000;
+items.forEach(li=>{if(now-li.dataset.ts<86400)li.classList.add('fresh')});
+const top=items.length?items[0].dataset.ts:'0';
+let last='0';try{last=localStorage.getItem('last')||'0'}catch(e){}
+const btn=document.getElementById('n'),st=document.getElementById('s');
+btn.onclick=()=>Notification.requestPermission().then(p=>st.textContent=p==='granted'?'Alerts on (keep this tab open)':'Blocked');
+if('Notification' in window&&Notification.permission==='granted'&&+top>+last&&last!=='0'){
+  new Notification('New clipping campaign',{body:items[0].querySelector('a').textContent});
+}
+try{localStorage.setItem('last',top)}catch(e){}
+setTimeout(()=>location.reload(),300000); // refresh every 5 min
+</script>
