@@ -1,0 +1,32 @@
+name: clip-notifier
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests
+
+      - name: Run notifier
+        run: python clip_notifier.py --once
+
+      - name: Save state and dashboard
+        run: |
+          git config user.name "clip-bot"
+          git config user.email "clip-bot@users.noreply.github.com"
+          git add seen.json matches.json docs/index.html
+          git diff --cached --quiet || git commit -m "update campaigns"
+          git push
